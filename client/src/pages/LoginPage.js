@@ -7,13 +7,16 @@ const LoginPage = () => {
   const [mode, setMode] = useState("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [success, setSuccess] = useState("");
+
   const [error, setError] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+ const handleSubmit = async (e) => {
   e.preventDefault();
   setError("");
+  setSuccess("");
 
   if (password.length < 6) {
     setError("Password must be at least 6 characters");
@@ -23,7 +26,13 @@ const LoginPage = () => {
   try {
     const api = mode === "login" ? loginUser : registerUser;
     const res = await api({ email, password });
+
     login(res.data.user, res.data.token);
+
+    if (mode === "register") {
+      setSuccess("Registration successful!");
+    }
+
     navigate("/");
   } catch (err) {
     setError(err.response?.data?.message || "Something went wrong");
