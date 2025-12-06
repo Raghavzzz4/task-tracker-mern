@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-// temporarily remove bcrypt hook to debug
-// const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
   {
@@ -10,9 +9,7 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// REMOVE any userSchema.pre("save", ...) blocks for now
-const bcrypt = require("bcrypt");
-
+// hash password before save
 userSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
   const salt = await bcrypt.genSalt(10);
@@ -20,8 +17,7 @@ userSchema.pre("save", async function () {
 });
 
 userSchema.methods.comparePassword = function (candidatePassword) {
-  // temporary plain-text comparison
-  return Promise.resolve(candidatePassword === this.password);
+  return bcrypt.compare(candidatePassword, this.password);
 };
 
 module.exports = mongoose.model("User", userSchema);
