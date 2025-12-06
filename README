@@ -1,0 +1,164 @@
+Task Tracker (MERN)
+A full‑stack task management app built with the MERN stack. Users can register and log in, then create, update, delete, filter, and toggle tasks with priorities and due dates. The project is deployed with a Node/Express backend and MongoDB Atlas, and a React frontend hosted separately.
+
+Features
+User authentication with JWT (register and login)
+
+Password hashing using bcrypt
+
+Task CRUD: create, read, update, delete
+
+Mark tasks as pending / completed (status toggle)
+
+Priority levels: low, medium, high
+
+Optional due date for each task
+
+Filters: All / Pending / Completed
+
+Task stats: total, completed, pending
+
+Responsive, modern UI built with React and custom CSS
+
+Deployed backend (Render) + frontend (Vercel) using MongoDB Atlas for persistence
+
+Tech Stack
+Frontend
+
+React (Create React App)
+
+Axios for API calls
+
+React Router for routing
+
+Context API for auth state management
+
+Backend
+
+Node.js + Express
+
+MongoDB + Mongoose
+
+JWT (jsonwebtoken)
+
+bcrypt for password hashing
+
+dotenv for environment variables
+
+CORS middleware
+
+Infrastructure
+
+MongoDB Atlas (cloud database)
+
+Render (Node/Express API hosting)
+
+Vercel (React app hosting)
+
+Project Structure
+text
+task-tracker-mern/
+  client/           # React frontend
+    src/
+      api/         # Axios instance + auth/task API helpers
+      pages/       # Login, Dashboard
+      context/     # AuthContext (user + token)
+      index.css    # Global styling
+  server/           # Node/Express backend
+    models/        # User, Task schemas
+    controllers/   # authController, taskController
+    routes/        # authRoutes, taskRoutes
+    middleware/    # authMiddleware (JWT)
+    utils/         # token helper (signToken)
+    index.js       # Express app + Mongo connection
+Getting Started (Local Development)
+1. Prerequisites
+Node.js (LTS) installed
+
+MongoDB running locally or a MongoDB Atlas connection string
+
+2. Clone and install
+bash
+git clone https://github.com/<your-username>/task-tracker-mern.git
+cd task-tracker-mern
+Backend
+
+bash
+cd server
+npm install
+Create server/.env:
+
+text
+PORT=5000
+MONGO_URI=mongodb://127.0.0.1:27017/tasktracker   # or your Atlas URI
+JWT_SECRET=supersecretkey123
+JWT_EXPIRES_IN=7d
+Run backend:
+
+bash
+npm run dev
+Frontend
+
+bash
+cd ../client
+npm install
+In client/package.json, keep:
+
+json
+"proxy": "http://localhost:5000"
+Run frontend:
+
+bash
+npm start
+App will be available at http://localhost:3000, talking to the backend at http://localhost:5000 via the proxy.
+
+API Overview
+Auth
+POST /api/auth/register
+
+Body: { "email": string, "password": string }
+
+Response: { token, user: { id, email } }
+
+POST /api/auth/login
+
+Body: { "email": string, "password": string }
+
+Response: { token, user: { id, email } }
+
+Tasks (protected – requires Authorization: Bearer <token>)
+GET /api/tasks?status=pending|completed
+
+POST /api/tasks
+
+{ title, priority, dueDate }
+
+PUT /api/tasks/:id
+
+PATCH /api/tasks/:id/toggle (flip pending/completed)
+
+DELETE /api/tasks/:id
+
+Deployment
+Backend
+Hosted on Render as a Node/Express web service with root directory server.
+
+Build command: npm install
+
+Start command: npm start
+
+Environment variables set in Render dashboard: MONGO_URI, JWT_SECRET, JWT_EXPIRES_IN, PORT (optional).
+
+Frontend
+Hosted on Vercel with root directory client.
+
+Build command: npm run build, output build.
+
+client/src/api/http.js uses:
+
+js
+baseURL =
+  process.env.NODE_ENV === "production"
+    ? "https://<your-render-service>.onrender.com/api"
+    : "/api";
+So local dev calls the proxy, and production calls the Render API directly.
