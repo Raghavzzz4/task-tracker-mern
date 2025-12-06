@@ -1,7 +1,10 @@
 import axios from "axios";
 
 const http = axios.create({
-  baseURL: "/api"
+  baseURL:
+    process.env.NODE_ENV === "production"
+      ? "https://task-tracker-mern-s6re.onrender.com/api"
+      : "/api"
 });
 
 http.interceptors.request.use((config) => {
