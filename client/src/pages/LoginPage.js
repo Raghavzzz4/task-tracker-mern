@@ -27,18 +27,19 @@ const LoginPage = () => {
     const api = mode === "login" ? loginUser : registerUser;
     const res = await api({ email, password });
 
-    login(res.data.user, res.data.token);
-
-    if (mode === "register") {
-      setSuccess("Registration successful!");
+    if (mode === "login") {
+      // normal login flow
+      login(res.data.user, res.data.token);
+      navigate("/");
+    } else {
+      // register: only show success + reset fields, stay on form
+      setSuccess("Registration successful! You can now log in.");
+      setPassword("");
     }
-
-    navigate("/");
   } catch (err) {
     setError(err.response?.data?.message || "Something went wrong");
   }
 };
-
 
   return (
     <div className="auth-container">
